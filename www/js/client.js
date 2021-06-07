@@ -38,7 +38,7 @@ var callStartTime;
 var callElapsedTime;
 var recStartTime;
 var recElapsedTime;
-var mirotalkTheme = "neon"; // neon - dark - forest - ghost ...
+var nxtalkTheme = "neon"; // neon - dark - forest - ghost ...
 var swalBackground = "rgba(0, 0, 0, 0.7)"; // black - #16171b - transparent ...
 var signalingServerPort = 3000; // must be same of server PORT
 var signalingServer = getServerUrl();
@@ -238,7 +238,7 @@ function getHtmlElementsById() {
   audioInputSelect = getId("audioSource");
   audioOutputSelect = getId("audioOutput");
   videoSelect = getId("videoSource");
-  themeSelect = getId("mirotalkTheme");
+  themeSelect = getId("nxalkTheme");
   // my conference name, hand, video - audio status
   myVideoParagraph = getId("myVideoParagraph");
   myHandStatusIcon = getId("myHandStatusIcon");
@@ -488,8 +488,8 @@ function thereIsPeerConnections() {
  * On body load Get started
  */
 function initPeer() {
-  // set mirotalk theme
-  setTheme(mirotalkTheme);
+  // set nxtalk theme
+  setTheme(nxtalkTheme);
 
   // check if peer is done for WebRTC
   if (!isWebRTCSupported) {
@@ -526,7 +526,7 @@ function initPeer() {
       allowOutsideClick: false,
       background: swalBackground,
       position: "center",
-      imageAlt: "mirotalk-name",
+      imageAlt: "nxtalk-name",
       imageUrl: welcomeImg,
       title: "Enter your name",
       input: "text",
@@ -597,7 +597,7 @@ function initPeer() {
       background: swalBackground,
       position: "center",
       title: "<strong>Welcome " + myPeerName + "</strong>",
-      imageAlt: "mirotalk-welcome",
+      imageAlt: "nxtalk-welcome",
       imageUrl: welcomeImg,
       html:
         `
@@ -623,7 +623,7 @@ function initPeer() {
       } else if (result.isDenied) {
         let message = {
           email: "",
-          subject: "Please join our Mirotalk Video Chat Meeting",
+          subject: "Please join our NXTalk Video Chat Meeting",
           body: "Click to join: " + myRoomUrl,
         };
         shareRoomByEmail(message);
@@ -831,7 +831,7 @@ function initPeer() {
         console.log("Datachannel event " + peer_id, event);
         event.channel.onmessage = (msg) => {
           switch (event.channel.label) {
-            case "mirotalk_chat_channel":
+            case "nxtalk_chat_channel":
               let dataMessage = {};
               try {
                 dataMessage = JSON.parse(msg.data);
@@ -840,7 +840,7 @@ function initPeer() {
                 console.log(err);
               }
               break;
-            case "mirotalk_file_sharing_channel":
+            case "nxtalk_file_sharing_channel":
               handleDataChannelFileSharing(msg.data);
               break;
           }
@@ -1065,14 +1065,14 @@ function initPeer() {
 } // end [initPeer]
 
 /**
- * Set mirotalk theme neon - dark - ghost
+ * Set nxtalk theme neon - dark - ghost
  * @param {*} theme
  */
 function setTheme(theme) {
   if (!theme) return;
 
-  mirotalkTheme = theme;
-  switch (mirotalkTheme) {
+  nxtalkTheme = theme;
+  switch (nxtalkTheme) {
     case "neon":
       // neon theme
       swalBackground = "rgba(0, 0, 0, 0.7)";
@@ -1701,7 +1701,7 @@ function setChatRoomBtn() {
 
   // ghost theme + undo
   msgerTheme.addEventListener("click", (e) => {
-    if (mirotalkTheme == "ghost") return;
+    if (nxtalkTheme == "ghost") return;
 
     if (e.target.className == "fas fa-ghost") {
       e.target.className = "fas fa-undo";
@@ -1709,7 +1709,7 @@ function setChatRoomBtn() {
       document.documentElement.style.setProperty("--msger-private-bg", "black");
     } else {
       e.target.className = "fas fa-ghost";
-      mirotalkTheme == "dark"
+      nxtalkTheme == "dark"
         ? document.documentElement.style.setProperty("--msger-bg", "#16171b")
         : document.documentElement.style.setProperty("--msger-bg", "black");
     }
@@ -2165,7 +2165,7 @@ async function shareRoomUrl() {
       background: swalBackground,
       position: "center",
       title: "Share the Room",
-      imageAlt: "mirotalk-share",
+      imageAlt: "nxtalk-share",
       imageUrl: shareUrlImg,
       html:
         `
@@ -2195,7 +2195,7 @@ async function shareRoomUrl() {
       } else if (result.isDenied) {
         let message = {
           email: "",
-          subject: "Please join our Mirotalk Video Chat Meeting",
+          subject: "Please join our NXTalk Video Chat Meeting",
           body: "Click to join: " + myRoomUrl,
         };
         shareRoomByEmail(message);
@@ -2571,7 +2571,7 @@ function stopStreamRecording() {
  * Set Record Button UI on change theme
  */
 function setRecordButtonUi() {
-  if (mirotalkTheme == "ghost") {
+  if (nxtalkTheme == "ghost") {
     recordStreamBtn.style.setProperty("background-color", "transparent");
   } else {
     recordStreamBtn.style.setProperty("background-color", "white");
@@ -2732,7 +2732,7 @@ function hideChatRoomAndEmojiPicker() {
  */
 function createChatDataChannel(peer_id) {
   chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
-    "mirotalk_chat_channel"
+    "nxtalk_chat_channel"
   );
 }
 
@@ -3267,7 +3267,7 @@ function setColor(newcolor) {
  * Whiteboard eraser
  */
 function setEraser() {
-  mirotalkTheme == "dark" ? (color = "#000000") : (color = "#ffffff");
+  nxtalkTheme == "dark" ? (color = "#000000") : (color = "#ffffff");
   drawsize = 10;
   whiteboardColorPicker.value = color;
 }
@@ -3365,7 +3365,7 @@ function setupCanvas() {
  * Whiteboard bg and colors on theme changes
  */
 function setWhiteboardBgandColors() {
-  if (mirotalkTheme == "dark") {
+  if (nxtalkTheme == "dark") {
     whiteboardWhiteColor.style.display = "flex";
     whiteboardBlackColor.style.display = "none";
     setColor("#ffffff");
@@ -3388,7 +3388,7 @@ function setWhiteboardBgandColors() {
  */
 function createFileSharingDataChannel(peer_id) {
   fileSharingDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
-    "mirotalk_file_sharing_channel"
+    "nxtalk_file_sharing_channel"
   );
   fileSharingDataChannels[peer_id].binaryType = "arraybuffer";
   fileSharingDataChannels[peer_id].addEventListener(
@@ -3556,7 +3556,7 @@ function selectFileToShare() {
   Swal.fire({
     allowOutsideClick: false,
     background: swalBackground,
-    imageAlt: "mirotalk-file-sharing",
+    imageAlt: "nxtalk-file-sharing",
     imageUrl: fileSharingImg,
     position: "center",
     title: "Share the file",
@@ -3658,7 +3658,7 @@ function endDownload() {
           " size " +
           bytesToSize(incomingFileInfo.fileSize),
         imageUrl: e.target.result,
-        imageAlt: "mirotalk-file-img-download",
+        imageAlt: "nxtalk-file-img-download",
         showDenyButton: true,
         confirmButtonText: `Save`,
         denyButtonText: `Cancel`,
@@ -3681,7 +3681,7 @@ function endDownload() {
     Swal.fire({
       allowOutsideClick: false,
       background: swalBackground,
-      imageAlt: "mirotalk-file-download",
+      imageAlt: "nxtalk-file-download",
       imageUrl: fileSharingImg,
       position: "center",
       title: "Received file",
@@ -3795,7 +3795,7 @@ function disableAllPeers(element) {
   Swal.fire({
     background: swalBackground,
     position: "center",
-    imageAlt: "mirotalk-disable-" + element,
+    imageAlt: "nxtalk-disable-" + element,
     imageUrl: confirmImg,
     title:
       element == "audio"
@@ -3913,7 +3913,7 @@ function kickedOut(peer_name) {
 
 /**
  * About info
- * https://sweetalert2.github.io
+ * https://nivash.me
  */
 function getAbout() {
   playSound("newMessage");
@@ -3922,13 +3922,12 @@ function getAbout() {
     background: swalBackground,
     position: "center",
     title: "<strong>WebRTC Made with ❤️</strong>",
-    imageAlt: "mirotalk-about",
+    imageAlt: "nxtalk-about",
     imageUrl: aboutImg,
     html: `
     <br/>
-    <div id="about"><b>open source</b> project on<a href="https://github.com/miroslavpejic85/mirotalk" target="_blank"><h1><strong> GitHub </strong></h1></a></div>
-    <div id="author"><a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank">Author: Miroslav Pejic</a></div><br>
-    <button id="sponsorBtn" class="far fa-heart pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"> Sponsor</button>
+    <div id="author"><a href="https://nivash.me" target="_blank">Author: Nivash😜</a></div><br>
+    <button id="sponsorBtn" class="far fa-heart pulsate" onclick="window.open('https://upayi.nivash.me/nivash7@paytm')"> Sponsor</button>
     `,
     showClass: {
       popup: "animate__animated animate__fadeInDown",
@@ -3941,7 +3940,7 @@ function getAbout() {
 
 /**
  * Leave the Room and create a new one
- * https://sweetalert2.github.io
+ * https://nivash.me
  */
 function leaveRoom() {
   playSound("newMessage");
@@ -3949,7 +3948,7 @@ function leaveRoom() {
   Swal.fire({
     background: swalBackground,
     position: "center",
-    imageAlt: "mirotalk-leave",
+    imageAlt: "nxtalk-leave",
     imageUrl: leaveRoomImg,
     title: "Leave this room?",
     showDenyButton: true,
