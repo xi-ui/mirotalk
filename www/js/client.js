@@ -238,7 +238,7 @@ function getHtmlElementsById() {
   audioInputSelect = getId("audioSource");
   audioOutputSelect = getId("audioOutput");
   videoSelect = getId("videoSource");
-  themeSelect = getId("nxalkTheme");
+  themeSelect = getId("nxtalkTheme");
   // my conference name, hand, video - audio status
   myVideoParagraph = getId("myVideoParagraph");
   myHandStatusIcon = getId("myHandStatusIcon");
@@ -3295,7 +3295,7 @@ function setColor(newcolor) {
  * Whiteboard eraser
  */
 function setEraser() {
-  nxtalkTheme == "dark" ? (color = "#000000") : (color = "#ffffff");
+    nxtalkTheme == "dark" ? (color = "#000000") : (color = "#ffffff");
   drawsize = 10;
   whiteboardColorPicker.value = color;
 }
@@ -3941,7 +3941,7 @@ function kickedOut(peer_name) {
 
 /**
  * About info
- * https://nivash.me
+ * https://sweetalert2.github.io
  */
 function getAbout() {
   playSound("newMessage");
@@ -3954,7 +3954,8 @@ function getAbout() {
     imageUrl: aboutImg,
     html: `
     <br/>
-    <div id="author"><a href="https://nivash.me" target="_blank">Author: Nivash😜</a></div><br>
+    <div id="about"><b>open source</b> project on<a href="https://github.com/XI11A/" target="_blank"><h1><strong> GitHub </strong></h1></a></div>
+    <div id="author"><a href="https://nivash.me/" target="_blank">Author: Nivash</a></div><br>
     <button id="sponsorBtn" class="far fa-heart pulsate" onclick="window.open('https://upayi.nivash.me/nivash7@paytm')"> Sponsor</button>
     `,
     showClass: {
@@ -3968,7 +3969,7 @@ function getAbout() {
 
 /**
  * Leave the Room and create a new one
- * https://nivash.me
+ * https://sweetalert2.github.io
  */
 function leaveRoom() {
   playSound("newMessage");
