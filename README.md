@@ -32,7 +32,8 @@ Open the app in one of following **supported browser**
 
 - Is `100% Free` and `Open Source`
 - No download, plug-in or login required, entirely browser based
-- Unlimited users, without time limitation
+- Unlimited number of conference rooms without call time limitation
+- Desktop and Mobile compatible
 - Optimized Room Url Sharing (share it to your participants, wait them to join)
 - WebCam Streaming (Front - Rear for mobile)
 - Audio Streaming
@@ -46,6 +47,7 @@ Open the app in one of following **supported browser**
 - Possibility to Change UI Themes
 - Right click on the Video elements for more options
 - Direct `peer-to-peer` connection ensures lowest latency thanks to `webrtc`
+- Supports `API` (Application Programming Interface)
 
 ## Demo
 
@@ -54,9 +56,9 @@ Open the app in one of following **supported browser**
 - `Allow` to use the camera and microphone
 - `Share` the Room URL and `Wait` someone to join for video conference
 
-## Room name
+## Room join
 
-- You can also `join` directly to your room name by going to https://mirotalk.herokuapp.com/join/your-room-name-goes-here `or` https://mirotalk.up.railway.app/join/your-room-name-goes-here
+- You can also `join` directly to your `room` by going to https://mirotalk.herokuapp.com/join/your-room-name-goes-here `or` https://mirotalk.up.railway.app/join/your-room-name-goes-here
 
 ## Quick start
 
@@ -64,7 +66,7 @@ Open the app in one of following **supported browser**
 - Clone this repo
 
 ```bash
-git clone git@github.com:miroslavpejic85/mirotalk.git
+git clone https://github.com/miroslavpejic85/mirotalk.git
 cd mirotalk
 ```
 
@@ -106,6 +108,42 @@ npm start
 ```
 
 - Open http://localhost:3000 in browser
+
+---
+
+## Docker
+
+Install: https://docs.docker.com/compose/install/
+
+```bash
+cp .env.template .env
+docker-compose up # or
+docker-compose up -d
+```
+
+- Open http://localhost:3000 in browser
+
+To `Update` image after some mirotalk `changes` or `updates`.
+
+```bash
+docker-compose build
+```
+
+To `Stops` containers and removes containers, networks, volumes, and images created by `up`
+
+```bash
+docker-compose down
+```
+
+## API
+
+The `response` will give you a `entrypoint / Room URL` for `your meeting`.
+
+```bash
+curl -X POST "http://localhost:3000/api/v1/meeting" -H "authorization: YourApiKeySecret" -H "Content-Type: application/json" -d "{ \"title\": \"Mirotalk GET meeting\"}"
+curl -X POST "https://mirotalk.up.railway.app/api/v1/meeting" -H "authorization: mirotalk_default_secret" -H "Content-Type: application/json" -d "{ \"title\": \"Mirotalk GET meeting\"}"
+curl -X POST "https://mirotalk.herokuapp.com/api/v1/meeting" -H "authorization: mirotalk_default_secret" -H "Content-Type: application/json" -d "{ \"title\": \"Mirotalk GET meeting\"}"
+```
 
 ---
 

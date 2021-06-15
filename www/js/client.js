@@ -713,6 +713,7 @@ function initPeer() {
 
         // handle peers name video audio status
         const remoteStatusMenu = document.createElement("div");
+        const remoteVideoParagraphImg = document.createElement("i");
         const remoteVideoParagraph = document.createElement("h4");
         const remoteHandStatusIcon = document.createElement("button");
         const remoteVideoStatusIcon = document.createElement("button");
@@ -726,6 +727,8 @@ function initPeer() {
         remoteStatusMenu.className = "statusMenu";
 
         // remote peer name element
+        remoteVideoParagraphImg.setAttribute("id", peer_id + "_nameImg");
+        remoteVideoParagraphImg.className = "fas fa-user";
         remoteVideoParagraph.setAttribute("id", peer_id + "_name");
         remoteVideoParagraph.className = "videoPeerName";
         tippy(remoteVideoParagraph, {
@@ -771,6 +774,7 @@ function initPeer() {
         remoteVideoAvatarImage.className = "videoAvatarImage pulsate";
 
         // add elements to remoteStatusMenu div
+        remoteStatusMenu.appendChild(remoteVideoParagraphImg);
         remoteStatusMenu.appendChild(remoteVideoParagraph);
         remoteStatusMenu.appendChild(remoteHandStatusIcon);
         remoteStatusMenu.appendChild(remoteVideoStatusIcon);
@@ -799,12 +803,8 @@ function initPeer() {
         attachMediaStream(remoteMedia, remoteMediaStream);
         resizeVideos();
 
-        if (!isMobileDevice) {
-          handleVideoPlayerFs(peer_id + "_video", peer_id + "_fullScreen");
-        } else {
-          remoteVideoFullScreenBtn.style.display = "none";
-        }
-
+        // handle video full screen mode
+        handleVideoPlayerFs(peer_id + "_video", peer_id + "_fullScreen");
         // handle kick out button event
         handlePeerKickOutBtn(peer_id);
         // refresh remote peers avatar name
@@ -824,6 +824,7 @@ function initPeer() {
       /**
        * Secure Data Channel (production mode)
        * https://developer.mozilla.org/en-US/docs/Web/API/RTCDataChannel
+       * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
        * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/ondatachannel
        * https://developer.mozilla.org/en-US/docs/Web/API/RTCDataChannel/onmessage
        */
@@ -847,7 +848,6 @@ function initPeer() {
         };
       };
 
-      // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createDataChannel
       createChatDataChannel(peer_id);
       createFileSharingDataChannel(peer_id);
       // ...
@@ -1248,7 +1248,9 @@ function setupLocalMedia(callback, errorback) {
 
       // handle my peer name video audio status
       const myStatusMenu = document.createElement("div");
+      const myCountTimeImg = document.createElement("i");
       const myCountTime = document.createElement("p");
+      const myVideoParagraphImg = document.createElement("i");
       const myVideoParagraph = document.createElement("h4");
       const myHandStatusIcon = document.createElement("button");
       const myVideoStatusIcon = document.createElement("button");
@@ -1261,11 +1263,15 @@ function setupLocalMedia(callback, errorback) {
       myStatusMenu.className = "statusMenu";
 
       // session time
+      myCountTimeImg.setAttribute("id", "countTimeImg");
+      myCountTimeImg.className = "fas fa-clock";
       myCountTime.setAttribute("id", "countTime");
       tippy(myCountTime, {
         content: "Session Time",
       });
       // my peer name
+      myVideoParagraphImg.setAttribute("id", "myVideoParagraphImg");
+      myVideoParagraphImg.className = "fas fa-user";
       myVideoParagraph.setAttribute("id", "myVideoParagraph");
       myVideoParagraph.className = "videoPeerName";
       tippy(myVideoParagraph, {
@@ -1301,7 +1307,9 @@ function setupLocalMedia(callback, errorback) {
       myVideoAvatarImage.className = "videoAvatarImage pulsate";
 
       // add elements to myStatusMenu div
+      myStatusMenu.appendChild(myCountTimeImg);
       myStatusMenu.appendChild(myCountTime);
+      myStatusMenu.appendChild(myVideoParagraphImg);
       myStatusMenu.appendChild(myVideoParagraph);
       myStatusMenu.appendChild(myHandStatusIcon);
       myStatusMenu.appendChild(myVideoStatusIcon);
@@ -1344,21 +1352,17 @@ function setupLocalMedia(callback, errorback) {
       setupMySettings();
       startCountTime();
 
-      // on click go on Full Screen mode - back
-      if (!isMobileDevice) {
-        handleVideoPlayerFs("myVideo", "myVideoFullScreenBtn");
-      } else {
-        myVideoFullScreenBtn.style.display = "none";
-      }
+      // handle video full screen mode
+      handleVideoPlayerFs("myVideo", "myVideoFullScreenBtn");
 
       if (callback) callback();
     })
-    .catch((e) => {
+    .catch((err) => {
       // user denied access to audio/video
       // https://blog.addpipe.com/common-getusermedia-errors/
-      console.error("Access denied for audio/video", e);
+      console.error("Access denied for audio/video", err);
       playSound("error");
-      window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${e.message}`;
+      window.location.href = `/permission?roomId=${roomId}&getUserMediaError=${err}`;
       if (errorback) errorback();
     });
 } // end [setup_local_stream]
@@ -1471,9 +1475,16 @@ function handleVideoPlayerFs(videoId, videoFullScreenBtnId) {
   videoFullScreenBtn.addEventListener("click", (e) => {
     handleFSVideo();
   });
+
   // on video click go on FS
   videoPlayer.addEventListener("click", (e) => {
-    handleFSVideo();
+    // not mobile on click go on FS or exit from FS
+    if (!isMobileDevice) {
+      handleFSVideo();
+    } else {
+      // mobile on click exit from FS, for enter use videoFullScreenBtn
+      if (isVideoOnFullScreen) handleFSVideo();
+    }
   });
 
   function handleFSVideo() {
@@ -1533,7 +1544,7 @@ function startRecordingTime() {
     if (isStreamRecording) {
       recElapsedTime = Date.now() - recStartTime;
       myVideoParagraph.innerHTML =
-        myPeerName + " 🔴 REC " + getTimeToString(recElapsedTime);
+        myPeerName + "&nbsp;&nbsp; 🔴 REC " + getTimeToString(recElapsedTime);
       return;
     }
     clearInterval(rc);
@@ -1629,7 +1640,10 @@ function setSwapCameraBtn() {
  * if yes show button else hide it
  */
 function setScreenShareBtn() {
-  if (navigator.getDisplayMedia || navigator.mediaDevices.getDisplayMedia) {
+  if (
+    !isMobileDevice &&
+    (navigator.getDisplayMedia || navigator.mediaDevices.getDisplayMedia)
+  ) {
     // share screen on - off button click event
     screenShareBtn.addEventListener("click", (e) => {
       toggleScreenSharing();
@@ -1969,6 +1983,8 @@ function setupMySettings() {
  * Refresh Local media audio video in - out
  */
 function refreshLocalMedia() {
+  // some devices can't swap the video track, if already in execution.
+  stopLocalVideoTrack();
   const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
   const constraints = {
@@ -2092,7 +2108,8 @@ function handleError(error) {
     error.message,
     error.name
   );
-  userLog("error", "Something wrong: " + error.message);
+  userLog("error", "GetUserMedia error: " + error);
+  // https://blog.addpipe.com/common-getusermedia-errors/
 }
 
 /**
@@ -2295,13 +2312,16 @@ function handleVideo(e, init) {
 }
 
 /**
- * SwapCamer front (user) - rear (environment)
+ * SwapCamera front (user) - rear (environment)
  */
 function swapCamera() {
   // setup camera
   camera = camera == "user" ? "environment" : "user";
   if (camera == "user") useVideo = true;
   else useVideo = { facingMode: { exact: camera } };
+
+  // some devices can't swap the cam, if have Video Track already in execution.
+  if (useVideo) stopLocalVideoTrack();
 
   // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
   navigator.mediaDevices
@@ -2317,8 +2337,16 @@ function swapCamera() {
     })
     .catch((e) => {
       console.log("[Error] to swaping camera", e);
-      userLog("error", "Error to swaping the camera: " + e.message);
+      userLog("error", "Error to swaping the camera " + e);
+      // https://blog.addpipe.com/common-getusermedia-errors/
     });
+}
+
+/**
+ * Stop Local Video Track
+ */
+function stopLocalVideoTrack() {
+  localMediaStream.getVideoTracks()[0].stop();
 }
 
 /**
@@ -2363,7 +2391,7 @@ function toggleScreenSharing() {
   screenMediaPromise
     .then((screenStream) => {
       // stop cam video track on screen share
-      localMediaStream.getVideoTracks()[0].stop();
+      stopLocalVideoTrack();
       isScreenStreaming = !isScreenStreaming;
       refreshMyStreamToPeers(screenStream);
       refreshMyLocalStream(screenStream);

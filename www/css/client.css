@@ -266,12 +266,13 @@ body {
   animation-duration: 1s;
   overflow: hidden;
 }
+.statusMenu i,
 .statusMenu p,
 .statusMenu h4 {
   color: white;
   display: inline;
   border: none;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 .statusMenu button {
   float: right;
@@ -893,7 +894,7 @@ video:fullscreen {
 }
 
 #myPeerNameSet {
-  font-size: 1.1rem;
+  font-size: 1rem;
   border: 1px solid white;
   color: white;
   background-color: #2b2b2b;
@@ -907,7 +908,6 @@ video:fullscreen {
   font-size: 1rem;
   color: white;
   background-color: transparent;
-  transition: background 0.23s;
 }
 
 #myPeerNameSetBtn:hover {
